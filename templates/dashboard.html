@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 20px; background-color: #fafafa;">
+
+    <div style="background: #343a40; color: white; padding: 15px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2>🛠️ Control Room Dashboard</h2>
+        <p>Namaste, <span style="color: #ffc107; font-weight: bold;">{{ username }}</span>! | Status: <strong>{{ role.upper() }}</strong></p>
+    </div>
+
+    {% if role == 'user' %}
+    <div style="background: white; padding: 20px; margin-top: 20px; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <h3 style="color: #dc3545;">⚠️ Nayi Shikayat Darj Karein</h3>
+        <form action="/submit-problem" method="POST">
+            <input type="hidden" name="username" value="{{ username }}">
+            <input type="hidden" name="phone" value="{{ phone }}">
+            <input type="hidden" name="email" value="{{ email }}">
+            
+            <input type="text" name="title" placeholder="Shikayat ka mudda (e.g., Naali jaam hai)" required style="padding: 10px; width: 95%; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;"><br>
+            <input type="text" name="category" placeholder="Category (e.g., Safai, Bijli, Sadak)" required style="padding: 10px; width: 95%; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;"><br>
+            <textarea name="details" placeholder="Poori pareshani vistar se likhein..." required style="padding: 10px; width: 95%; height: 80px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;"></textarea><br>
+            
+            <button type="submit" style="padding: 12px 25px; background-color: #dc3545; color: white; border: none; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 15px;">
+                🚀 Shikayat Submit Karein
+            </button>
+        </form>
+    </div>
+    {% endif %}
+
+    {% if role == 'guest' %}
+    <div style="background: #fff3cd; color: #856404; padding: 15px; margin-top: 20px; border-radius: 5px; border: 1px solid #ffeeba;">
+        <strong>🔒 Security Lock:</strong> Aap sirf list dekh sakte hain. Agar aapko koi nanyi shikayat likhni hai, toh kripya <a href="/" style="font-weight: bold; color: #0056b3;">Yahan Click karke Account Banayein</a>.
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 30px;">
+        <h3>📋 Sabhi Shikayaton Ki List:</h3>
+        {% for prob in problems %}
+        <div style="background: white; padding: 15px; border-left: 5px solid #007bff; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-radius: 0 5px 5px 0;">
+            <h4 style="margin: 0 0 10px 0;">{{ prob.title }} 
+                <span style="background: #e2e3e5; font-size: 11px; padding: 3px 8px; border-radius: 10px; color: #383d41; margin-left: 10px;">{{ prob.category }}</span>
+            </h4>
+            <p style="color: #555; font-size: 14px; margin-bottom: 10px;">{{ prob.details }}</p>
+            <p style="font-size: 12px; color: gray; margin-bottom: 10px;">By: <strong>{{ prob.user }}</strong></p>
+            
+            <a href="https://api.whatsapp.com/send?text=🚨 *Nayi Shikayat Aayi Hai!*%0A%0A*Mudda:* {{ prob.title }}%0A*Category:* {{ prob.category }}%0A*Details:* {{ prob.details }}%0A*By User:* {{ prob.user }}" 
+               target="_blank" 
+               style="display: inline-block; padding: 6px 12px; background-color: #25d366; color: white; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                🟢 WhatsApp Par Bhejein
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
